@@ -85,20 +85,28 @@
   </div>
   <script src="/static/assets/vendors/jquery/jquery-1.12.4.js"></script>
   <script>
-      //判断数值是否为空
-      function isUndefined(value){
-          return value==undefined || $.trim(value).length==0;
-      }
-      //给email输入框注册时区焦点事件
-      $("#email").focusout(function(){
-          //获取输入框里面的值
-          var value = $("#email").val()
-          //发送jquery封装的ajax请求
-          $.post('/admin/api/avatar.php', { email: value }, function (res) {
-              //判断返回的值是否为空，为空则使用默认的值，不为空则使用返回的值
-              isUndefined(res) ? $(".avatar")[0].src= "/static/assets/img/default.png" : $(".avatar")[0].src= res
+      //入口函数
+      $(function($){
+          //判断数值是否为空
+          function isUndefined(value){
+              return value==undefined || $.trim(value).length==0;
+          }
+          //邮箱的正则表达式
+          var emailFormat = /^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[a-zA-Z0-9]+$/
+          //给email输入框注册时区焦点事件
+          $("#email").focusout(function(){
+              //获取输入框里面的值
+              var value = $("#email").val()
+              //在发送ajax请求前，先对输入的内容做判断是否为空和是否合法，这样可以减少服务器的压力
+              if(!value || !emailFormat.test(value)) return;
+              //发送jquery封装的ajax请求
+              $.post('/admin/api/avatar.php', { email: value }, function (res) {
+                  //判断返回的值是否为空，为空则使用默认的值，不为空则使用返回的值
+                  isUndefined(res) ? $(".avatar")[0].src= "/static/assets/img/default.png" : $(".avatar")[0].src= res
+              })
           })
       })
+
   </script>
 </body>
 </html>
