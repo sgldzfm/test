@@ -1,4 +1,6 @@
 <?php
+    //下发session
+    session_start();
     function postback(){
         if(empty($_POST['email'])):
             $GLOBALS['message'] = '邮箱不能为空';
@@ -36,29 +38,12 @@
             $GLOBALS['message'] = '邮箱与密码不匹配';
             return;
         }
+        //登陆成功，该session中存放一个登陆成功的标记。这是方法一
+        //$_SESSION['is_logged'] = true;
+        //方法二，登陆成功给session存放登陆成功的对象
+        $_SESSION['current_login_user'] = $user;
         //校验成功，跳转到首页
         header('Location: /admin/');
-        /*$contents = file_get_contents("../uploads/user.txt");
-        //拆分得到的字符串
-        // $lines = explode("\n",$contents);
-        $lines = explode("\n",$contents);
-        foreach ($lines as $item){
-            if($item =="") break;
-            $cols = explode("|",$item);
-            $data[] = $cols;
-            foreach($data as $user){
-                //$user[0];
-                $name = trim($user[0]);
-                $password = trim($user[1]);
-                if($_POST['username'] !== $name){
-                    break;
-                }
-                if($_POST['password'] !== $password){
-                    break;
-                }
-                $GLOBALS['succeed'] = '登陆成功';
-            }
-        }*/
     }
 
     if($_SERVER['REQUEST_METHOD']==='POST'){

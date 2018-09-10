@@ -1,3 +1,13 @@
+<?php
+
+//下发session
+session_start();
+
+if(empty($_SESSION['current_login_user'])){
+    //进入里面说明没有登陆,跳转回登陆页面
+    header('Location: /admin/login.php');
+}
+?>
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
