@@ -3,10 +3,14 @@
     //下发session
     session_start();
 
-    if(empty($_SESSION['current_login_user'])){
+    /*if(empty($_SESSION['current_login_user'])){
         //进入里面说明没有登陆,跳转回登陆页面
         header('Location: /admin/login.php');
-    }
+    }*/
+    //和上面注释的功能一样
+    require_once '../functions.php';
+    bx_get_current_user();
+
 ?>
 <!DOCTYPE html>
 <html lang="zh-CN">

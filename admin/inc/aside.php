@@ -1,8 +1,16 @@
-<?php echo $_SERVER['PHP_SELF']?>
+<?php
+    //因为这个文件是要include到别的文件里的，相当于把里面的代码复制到那个文件里执行
+    //所以下面使用的相对路径就会出现找不到文件或木路的报错信息
+    //require_once'../functions.php';//因为不清楚include这个文件的位置，或者有可能变动
+    //所以先通过dirname(__FILE__)获取带盘符的路劲，然后再以这个路劲的相对路劲找到药载入的文件
+    require_once dirname(__FILE__) .'/../../functions.php';
+    $bx_current_user = bx_get_current_user();
+
+?>
 <div class="aside">
     <div class="profile">
-        <img class="avatar" src="/static/uploads/avatar.jpg">
-        <h3 class="name">布头儿</h3>
+        <img class="avatar" src="<?php  echo $bx_current_user['avatar'] ?>">
+        <h3 class="name"><?php echo $bx_current_user['nickname']?></h3>
     </div>
     <ul class="nav">
         <li <?php echo $current_page === 'index' ? 'class="active"' : ''?>>
