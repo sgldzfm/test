@@ -65,7 +65,17 @@
             </ul>
           </div>
         </div>
-        <div class="col-md-4"></div>
+        <div class="col-md-4">
+                <div class="row">
+                    <div class="col-md-5">
+                        <canvas id="myChart" width="400" height="400"></canvas>
+                    </div>
+                    <div class="col-md-5">
+                        <canvas id="myChart2" width="400" height="400"></canvas>
+                    </div>
+                    <div class="col-md-2"></div>
+                </div>
+            </div>
         <div class="col-md-4"></div>
       </div>
     </div>
@@ -76,6 +86,39 @@
 
   <script src="/static/assets/vendors/jquery/jquery.js"></script>
   <script src="/static/assets/vendors/bootstrap/js/bootstrap.js"></script>
+  <script src="/static/assets/vendors/chart/chart.js"></script>
+  <script>
+      var popCanvas = document.getElementById("myChart");
+      var barChart = new Chart(popCanvas, {
+          type: 'doughnut',
+          data: {
+              labels: ["已发表", "草稿"],
+              datasets: [{
+                  label: '文章',
+                  data: [<?php echo $posts_count['num']-$draft_count['draft']?>, <?php echo $draft_count['draft']?>],
+                  backgroundColor: [
+                      'rgba(255, 99, 132, 0.6)',
+                      'rgba(54, 162, 235, 0.6)'
+                  ]
+              }]
+          }
+      });
+      var popCanvas2 = document.getElementById("myChart2");
+      var barChart2 = new Chart(popCanvas2, {
+          type: 'doughnut',
+          data: {
+              labels: ["总评论数", "待审核"],
+              datasets: [{
+                  label: '文章',
+                  data: [<?php echo $comments_count['comments']?>, <?php echo $audit_count['audit']?>],
+                  backgroundColor: [
+                      'rgba(255, 199, 132, 0.6)',
+                      'rgba(154, 162, 235, 0.6)'
+                  ]
+              }]
+          }
+      });
+  </script>
   <script>NProgress.done()</script>
 </body>
 </html>
