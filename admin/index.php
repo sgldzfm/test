@@ -15,15 +15,15 @@
     //载入配置文件
     require_once '../config.php';
     //查询数据库，获取文章总数
-    $posts_count = bx_fetch('select count(1) as num from posts');
+    $posts_count = bx_fetch_one('select count(1) as num from posts');
     //草稿总数:
-    $draft_count = bx_fetch("select count(1) as draft from posts where status = 'drafted'");
+    $draft_count = bx_fetch_one("select count(1) as draft from posts where status = 'drafted'");
     //分类总数:
-    $categories_count = bx_fetch('select count(1) as categories from categories');
+    $categories_count = bx_fetch_one('select count(1) as categories from categories');
     //评论总数:
-    $comments_count = bx_fetch('select count(1) as comments from comments');
+    $comments_count = bx_fetch_one('select count(1) as comments from comments');
     //待审核的评论总数:
-    $audit_count = bx_fetch("select count(1)  as audit from comments where status = 'held'");
+    $audit_count = bx_fetch_one("select count(1)  as audit from comments where status = 'held'");
 
 
 
@@ -59,9 +59,9 @@
               <h3 class="panel-title">站点内容统计：</h3>
             </div>
             <ul class="list-group">
-              <li class="list-group-item"><strong><?php echo $posts_count[0]['num']?></strong>篇文章（<strong><?php echo $draft_count[0]['draft']?></strong>篇草稿）</li>
-              <li class="list-group-item"><strong><?php echo $categories_count[0]['categories']?></strong>个分类</li>
-              <li class="list-group-item"><strong><?php echo $comments_count[0]['comments']?></strong>条评论（<strong><?php echo $audit_count[0]['audit']?></strong>条待审核）</li>
+              <li class="list-group-item"><strong><?php echo $posts_count['num']?></strong>篇文章（<strong><?php echo $draft_count['draft']?></strong>篇草稿）</li>
+              <li class="list-group-item"><strong><?php echo $categories_count['categories']?></strong>个分类</li>
+              <li class="list-group-item"><strong><?php echo $comments_count['comments']?></strong>条评论（<strong><?php echo $audit_count['audit']?></strong>条待审核）</li>
             </ul>
           </div>
         </div>
