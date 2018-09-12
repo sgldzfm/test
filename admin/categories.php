@@ -106,13 +106,13 @@ function postback(){
             <tbody>
             <!--循环取出分类信息的数组里的数据-->
             <?php foreach($categories as $value){?>
-              <tr>
+              <tr id="<?php echo $value['id']?>">
                 <td class="text-center"><input type="checkbox"></td>
                 <td><?php echo $value['name']?></td>
                 <td><?php echo $value['slug']?></td>
                 <td class="text-center">
                   <a href="javascript:;" class="btn btn-info btn-xs">编辑</a>
-                  <a href="javascript:;" class="btn btn-danger btn-xs">删除</a>
+                  <a href="javascript:;" class="btn btn-danger btn-xs delete" cid="<?php echo $value['id']?>">删除</a>
                 </td>
               </tr>
             <?php }?>
@@ -126,9 +126,23 @@ function postback(){
   <!--导入公共部分-->
   <?php $current_page='categories'?>
   <?php include'inc/aside.php'?>
-
   <script src="/static/assets/vendors/jquery/jquery.js"></script>
   <script src="/static/assets/vendors/bootstrap/js/bootstrap.js"></script>
+  <script>
+      $(function(){
+          $(".delete").click(function(){
+              NProgress.start()
+              var id = $(this).attr("cid");
+              var aobj = $(this);
+              $.post('./api/category_delete.php', { id: id }, function (res) {
+                  if(res){
+                      $("#"+id).remove()
+                  }
+              })
+              NProgress.done()
+          })
+      })
+  </script>
   <script>NProgress.done()</script>
 </body>
 </html>
