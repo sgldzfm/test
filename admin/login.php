@@ -84,7 +84,7 @@
       <button class="btn btn-primary btn-block" >登 录</button>
     </form>
   </div>
-  <script src="/static/assets/vendors/jquery/jquery-1.12.4.js"></script>
+  <script src="/static/assets/vendors/jquery/jquery.js"></script>
   <script>
       //入口函数
       $(function($){
