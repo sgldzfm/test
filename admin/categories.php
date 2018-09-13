@@ -92,7 +92,7 @@ function postback(){
         <div class="col-md-8">
           <div class="page-action">
             <!-- show when multiple checked -->
-            <a class="btn btn-danger btn-sm" href="javascript:;" style="display: none">批量删除</a>
+            <a id="batch" class="btn btn-danger btn-sm" href="javascript:;" style="display: none">批量删除</a>
           </div>
           <table class="table table-striped table-bordered table-hover">
             <thead>
@@ -130,6 +130,12 @@ function postback(){
   <script src="/static/assets/vendors/bootstrap/js/bootstrap.js"></script>
   <script>
       $(function(){
+          //是否显示批量删除按钮
+          $("tbody input").click(function(){
+              $("tbody input:checked").length > 0 ? $("#batch").css("display","block") : $("#batch").css("display","none")
+              /*check.checked*/
+          })
+          //删除单条数据的方法
           $(".delete").click(function(){
               NProgress.start()
               var id = $(this).attr("cid");
