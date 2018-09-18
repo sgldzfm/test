@@ -14,11 +14,17 @@
     require_once '../config.php';
     //添加文章分类的业务
     if($_SERVER['REQUEST_METHOD']==='POST'){
-
+        if($_GET['id']){
+            //带id的是修改信息
+            postAlter($_GET['id']);
+        } else{
             //不带id的是添加信息
             postback();
+        }
+
 
     }
+//获取信息
 function postback(){
     if(empty($_POST['edit_name'])):
         $GLOBALS['message'] = '分类名称不能为空';
@@ -38,7 +44,26 @@ function postback(){
     $GLOBALS['succeed'] = $rows>0;//值会是boolean值，为什么自己想去
     $GLOBALS['message'] = $rows <=0 ? '添加失败': '添加成功';
 }
-
+//提交修改信息
+function postAlter($id){
+    if(empty($_POST['edit_name'])):
+        $GLOBALS['message'] = '分类名称不能为空';
+        $GLOBALS['succeed'] = false;
+        return;
+    endif;
+    if(empty($_POST['edit_slug'])):
+        $GLOBALS['message'] = '别名不能为空';
+        $GLOBALS['succeed'] = false;
+        return;
+    endif;
+    //获取用户提交的数据
+    $name = $_POST['edit_name'];
+    $slug = $_POST['edit_slug'];
+    //向数据库插入数据，并返回影响行数
+    $rows = bx_execute("update categories set slug = '$slug',name = '$name' where id = '$id'");
+    $GLOBALS['succeed'] = $rows>0;//值会是boolean值，为什么自己想去
+    $GLOBALS['message'] = $rows <=0 ? '修改失败': '修改成功';
+}
 
     //获取文章分类信息
     $categories = bx_fetch_all('select * from categories');
@@ -80,15 +105,15 @@ function postback(){
                       <h2>添加新分类目录</h2>
                       <div class="form-group">
                           <label for="name">名称</label>
-                          <input id="edit_name" class="form-control" name="name" type="text" placeholder="分类名称">
+                          <input id="edit_name" class="form-control" name="edit_name" type="text" placeholder="分类名称">
                       </div>
                       <div class="form-group">
                           <label for="slug">别名</label>
-                          <input id="edit_slug" class="form-control" name="slug" type="text" placeholder="slug">
+                          <input id="edit_slug" class="form-control" name="edit_slug" type="text" placeholder="slug">
                           <p class="help-block">https://zce.me/category/<strong>slug</strong></p>
                       </div>
                       <div class="form-group">
-                          <button id="edit_alter" class="btn btn-primary" type="submit">添加</button>
+                          <button id="edit_alter" class="btn btn-primary" >添加</button>
                       </div>
                   </form>
               </div>
@@ -230,7 +255,9 @@ function postback(){
               var id = $(this).data("edit");
               $.post('./api/category_edit.php', { id: id }, function (res) {
                   if(res){
-                      $("#edit h2").html("《编辑"+res.name+"》")
+
+                      $("#edit").prop('action','/admin/categories.php?id='+id)
+                      $("#edit h2").html("编辑《"+res.name+"》")
                       $("#edit button").html("修改")
                       $("#edit_name").val(res.name)
                       $("#edit_slug").val(res.slug)

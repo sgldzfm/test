@@ -5,7 +5,7 @@ require_once '../../functions.php';
 require_once '../../config.php';
 if($_SERVER['REQUEST_METHOD']==='POST'){
     if($_POST['id']){
-        //带id的是修改信息
+        //带id的是获取要修改的信息
         post_edit($_POST['id']);
     }
 }
