@@ -11,8 +11,16 @@ if(empty($_POST['id'])){
 }
 
 $id = $_POST['id'];
+$comma_separated = null;
+if( is_array( $id )) {
+    $comma_separated = implode(",", $id);
+} else {
+    $comma_separated = $id;
+}
 
-$rows = bx_execute("delete from categories where id = '{$id}'");
+
+//根据id删除数据，in里可以是根据多个id,删除多条数据
+$rows = bx_execute('delete from categories where id in('.$comma_separated.');');
 
 $result = $rows>0? true : false;
 echo $result;
