@@ -77,7 +77,8 @@ function postAlter($id){
   <link rel="stylesheet" href="/static/assets/vendors/font-awesome/css/font-awesome.css">
   <link rel="stylesheet" href="/static/assets/vendors/nprogress/nprogress.css">
   <link rel="stylesheet" href="/static/assets/css/admin.css">
-  <script src="/static/assets/vendors/nprogress/nprogress.js"></script>
+  <script src="/static/assets/vendors/nprogress/nprogress.js"></script><script src="/static/assets/vendors/jquery/jquery.js"></script>
+  <script src="/static/assets/vendors/bootstrap/js/bootstrap.js"></script>
 </head>
 <body>
   <script>NProgress.start()</script>
@@ -150,12 +151,9 @@ function postAlter($id){
       </div>
     </div>
   </div>
-
   <!--导入公共部分-->
   <?php $current_page='categories'?>
   <?php include'inc/aside.php'?>
-  <script src="/static/assets/vendors/jquery/jquery.js"></script>
-  <script src="/static/assets/vendors/bootstrap/js/bootstrap.js"></script>
   <script>
       $(function(){
           //第一种方式实现全选和全不选的功能

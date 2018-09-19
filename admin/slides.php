@@ -18,6 +18,8 @@ if(empty($_SESSION['current_login_user'])){
   <link rel="stylesheet" href="/static/assets/vendors/nprogress/nprogress.css">
   <link rel="stylesheet" href="/static/assets/css/admin.css">
   <script src="/static/assets/vendors/nprogress/nprogress.js"></script>
+  <script src="/static/assets/vendors/jquery/jquery.js"></script>
+  <script src="/static/assets/vendors/bootstrap/js/bootstrap.js"></script>
 </head>
 <body>
   <script>NProgress.start()</script>
@@ -101,8 +103,6 @@ if(empty($_SESSION['current_login_user'])){
   <?php $current_page='slides'?>
   <?php include'inc/aside.php'?>
 
-  <script src="/static/assets/vendors/jquery/jquery.js"></script>
-  <script src="/static/assets/vendors/bootstrap/js/bootstrap.js"></script>
   <script>NProgress.done()</script>
 </body>
 </html>

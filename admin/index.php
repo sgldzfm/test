@@ -39,6 +39,9 @@
   <link rel="stylesheet" href="/static/assets/vendors/nprogress/nprogress.css">
   <link rel="stylesheet" href="/static/assets/css/admin.css">
   <script src="/static/assets/vendors/nprogress/nprogress.js"></script>
+  <script src="/static/assets/vendors/jquery/jquery.js"></script>
+  <script src="/static/assets/vendors/bootstrap/js/bootstrap.js"></script>
+  <script src="/static/assets/vendors/chart/chart.js"></script>
 </head>
 <body>
   <script>NProgress.start()</script>
@@ -84,9 +87,6 @@
   <?php $current_page='index'?>
   <?php include'inc/aside.php'?>
 
-  <script src="/static/assets/vendors/jquery/jquery.js"></script>
-  <script src="/static/assets/vendors/bootstrap/js/bootstrap.js"></script>
-  <script src="/static/assets/vendors/chart/chart.js"></script>
   <script>
       var popCanvas = document.getElementById("myChart");
       var barChart = new Chart(popCanvas, {
