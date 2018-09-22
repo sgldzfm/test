@@ -7,6 +7,35 @@ if(empty($_SESSION['current_login_user'])){
     //进入里面说明没有登陆,跳转回登陆页面
     header('Location: /admin/login.php');
 }
+
+//导入需要的配置文件
+//使用数据库之前导入需要的常量
+//载入配置文件
+require_once '../functions.php';
+require_once '../config.php';
+
+//分页处理参数
+$page = empty($_GET['page']) ? 1 : (int)$_GET['page'];
+$step = 10;
+
+//越过几条数据
+$offset = ($page-1)*$step;
+
+$sql = "SELECT
+	posts.id,
+	posts.title,
+	users.nickname AS user_name,
+	categories.name AS category_name,
+	posts.created,
+	posts.status
+    FROM posts
+    INNER JOIN categories ON posts.category_id = categories.id
+    INNER JOIN users ON posts.user_id = users.id
+    ORDER BY posts.created DESC
+    LIMIT {$offset},{$step}	";
+$posts = bx_fetch_all($sql);
+var_dump($posts);
+
 ?>
 <!DOCTYPE html>
 <html lang="zh-CN">
@@ -72,42 +101,21 @@ if(empty($_SESSION['current_login_user'])){
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td class="text-center"><input type="checkbox"></td>
-            <td>随便一个名称</td>
-            <td>小小</td>
-            <td>潮科技</td>
-            <td class="text-center">2016/10/07</td>
-            <td class="text-center">已发布</td>
-            <td class="text-center">
-              <a href="javascript:;" class="btn btn-default btn-xs">编辑</a>
-              <a href="javascript:;" class="btn btn-danger btn-xs">删除</a>
-            </td>
-          </tr>
-          <tr>
-            <td class="text-center"><input type="checkbox"></td>
-            <td>随便一个名称</td>
-            <td>小小</td>
-            <td>潮科技</td>
-            <td class="text-center">2016/10/07</td>
-            <td class="text-center">已发布</td>
-            <td class="text-center">
-              <a href="javascript:;" class="btn btn-default btn-xs">编辑</a>
-              <a href="javascript:;" class="btn btn-danger btn-xs">删除</a>
-            </td>
-          </tr>
-          <tr>
-            <td class="text-center"><input type="checkbox"></td>
-            <td>随便一个名称</td>
-            <td>小小</td>
-            <td>潮科技</td>
-            <td class="text-center">2016/10/07</td>
-            <td class="text-center">已发布</td>
-            <td class="text-center">
-              <a href="javascript:;" class="btn btn-default btn-xs">编辑</a>
-              <a href="javascript:;" class="btn btn-danger btn-xs">删除</a>
-            </td>
-          </tr>
+        <?php foreach($posts as $value){?>
+            <tr>
+                <td class="text-center"><input type="checkbox"></td>
+                <td><?php echo $value['title']?></td>
+                <td><?php echo $value['user_name']?></td>
+                <td><?php echo $value['category_name']?></td>
+                <!--把时间年后面的一部分字符串去掉，再显示-->
+                <td class="text-center"><?php echo strstr($value['created'], ' ', TRUE);?></td>
+                <td class="text-center"><?php echo "published" == $value['status'] ? "已发布": "草稿" ;?></td>
+                <td class="text-center">
+                    <a href="javascript:;" class="btn btn-default btn-xs">编辑</a>
+                    <a href="javascript:;" class="btn btn-danger btn-xs">删除</a>
+                </td>
+            </tr>
+        <?php }?>
         </tbody>
       </table>
     </div>
