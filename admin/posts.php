@@ -34,8 +34,42 @@ $sql = "SELECT
     ORDER BY posts.created DESC
     LIMIT {$offset},{$step}	";
 $posts = bx_fetch_all($sql);
-var_dump($posts);
 
+
+//从数据库中得到总共有几条数据，并算出最大页数是多少
+$count_sql = "select count(1) as num from posts";
+$total_count = (int)bx_fetch_one($count_sql)['num'];
+$total_pages = (int)ceil($total_count/$step);
+var_dump($total_pages);
+
+//分页的页码处理
+//一共显示五页
+$visiables = 5;
+//最左边和最右边的页数与显示的页数的间隔
+$region = ($visiables - 1)/2;
+//得到最左边的页数
+$begin = $page - $region;
+//得到最右边的页数
+$end = $begin + $visiables;
+
+
+//处理左侧最小值得限定
+if($begin<1){
+    $begin = 1;
+    //并且保持显示的页数为5页
+    $end = $begin + $visiables;
+}
+
+//处理左侧最大值得限定
+if($end>$total_pages+1){
+    $end = $total_pages+1;
+
+    //当数据不够显示，原来需要显示的页数时让最左侧的页数为1就可以了
+    $begin = $end - $visiables;
+    if($begin<1){
+        $begin = 1;
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="zh-CN">
@@ -82,9 +116,9 @@ var_dump($posts);
         </form>
         <ul class="pagination pagination-sm pull-right">
           <li><a href="#">上一页</a></li>
-          <li><a href="#">1</a></li>
-          <li><a href="#">2</a></li>
-          <li><a href="#">3</a></li>
+          <?php for($i=$begin;$i<$end;$i++){?>
+              <li <?php echo $i===$page? 'class="active"':'';?>><a href="?page=<?php echo$i?>"><?php echo$i?></a></li>
+          <?php }?>
           <li><a href="#">下一页</a></li>
         </ul>
       </div>
