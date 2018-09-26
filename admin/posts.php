@@ -18,6 +18,21 @@ require_once '../config.php';
 $page = empty($_GET['page']) ? 1 : (int)$_GET['page'];
 $step = 10;
 
+//判断是否为用户是否在url输入的page小于1，当小于1时就跳转到第一页
+if($page<1){
+    header('Location: /admin/posts.php?page=1');
+}
+//从数据库中得到总共有几条数据，并算出最大页数是多少
+$count_sql = "select count(1) as num from posts INNER JOIN categories ON posts.category_id = categories.id
+    INNER JOIN users ON posts.user_id = users.id";
+$total_count = (int)bx_fetch_one($count_sql)['num'];
+$total_pages = (int)ceil($total_count/$step);
+
+//判断是否为用户是否在url输入的page大于最大页数，当大于最大页数时就跳转到最大页数
+if($page>$total_pages){
+    header("Location: /admin/posts.php?page={$total_pages }");
+}
+
 //越过几条数据
 $offset = ($page-1)*$step;
 
@@ -36,11 +51,7 @@ $sql = "SELECT
 $posts = bx_fetch_all($sql);
 
 
-//从数据库中得到总共有几条数据，并算出最大页数是多少
-$count_sql = "select count(1) as num from posts";
-$total_count = (int)bx_fetch_one($count_sql)['num'];
-$total_pages = (int)ceil($total_count/$step);
-var_dump($total_pages);
+
 
 //分页的页码处理
 //一共显示五页
