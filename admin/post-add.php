@@ -22,6 +22,9 @@ var_dump($_SESSION['current_login_user']['id']);
   <script src="/static/assets/vendors/jquery/jquery.js"></script>
   <script src="/static/assets/vendors/bootstrap/js/bootstrap.js"></script>
   <script src="/static/assets/vendors/ajaxfileupload/ajaxfileupload.js"></script>
+  <script src="/static/assets/vendors/ueditor1_4_3_3-utf8/ueditor.config.js"></script>
+  <script src="/static/assets/vendors/ueditor1_4_3_3-utf8/ueditor.all.js"></script>
+
 </head>
 <body>
   <script>NProgress.start()</script>
@@ -43,7 +46,8 @@ var_dump($_SESSION['current_login_user']['id']);
           </div>
           <div class="form-group">
             <label for="content">文章内容</label>
-            <textarea id="content" class="form-control input-lg" name="content" cols="30" rows="10" placeholder="内容"></textarea>
+            <!--<textarea id="content" class="form-control input-lg" name="content" cols="30" rows="10" placeholder="内容"></textarea>-->
+              <script id="content" name="content" type="text/plain">这是初始值</script>
           </div>
         </div>
         <div class="col-md-3">
@@ -168,5 +172,11 @@ var_dump($_SESSION['current_login_user']['id']);
 
   </script>
   <script>NProgress.done()</script>
+  <script>
+      UE.getEditor('content',{
+          initialFrameHeight:320,
+          autoHeight: false
+      })
+  </script>
 </body>
 </html>

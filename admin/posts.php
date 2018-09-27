@@ -154,6 +154,7 @@ if($end>$total_pages+1){
             <option value="">所有状态</option>
             <option value="drafted" <?php echo isset($_GET['status']) && $_GET['status'] === 'drafted' ? 'selected': '';?>>草稿</option>
             <option value="published" <?php echo isset($_GET['status']) && $_GET['status'] === 'published' ? 'selected': '';?>>已发布</option>
+            <option value="trashed" <?php echo isset($_GET['status']) && $_GET['status'] === 'trashed' ? 'selected': '';?>>回收站</option>
           </select>
           <button class="btn btn-default btn-sm">筛选</button>
         </form>
@@ -187,7 +188,9 @@ if($end>$total_pages+1){
                 <td><?php echo $value['category_name']?></td>
                 <!--把时间年后面的一部分字符串去掉，再显示-->
                 <td class="text-center"><?php echo strstr($value['created'], ' ', TRUE);?></td>
-                <td class="text-center"><?php echo "published" == $value['status'] ? "已发布": "草稿" ;?></td>
+                <td class="text-center"><?php  if("published" == $value['status']) {echo "已发布";}elseif("trashed" == $value['status']) {
+                        echo "回收站";}
+                     else {echo "草稿";}?></td>
                 <td class="text-center">
                     <a href="javascript:;" class="btn btn-default btn-xs">编辑</a>
                     <a href="javascript:;" class="btn btn-danger btn-xs">删除</a>
