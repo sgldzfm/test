@@ -17,7 +17,8 @@ require_once '../config.php';
 //分页处理参数
 $page = empty($_GET['page']) ? 1 : (int)$_GET['page'];
 $step = 10;
-
+$back = $page -1;
+$next = $page +1;
 //判断是否为用户是否在url输入的page小于1，当小于1时就跳转到第一页
 if($page<1){
     header('Location: /admin/posts.php?page=1');
@@ -126,11 +127,11 @@ if($end>$total_pages+1){
           <button class="btn btn-default btn-sm">筛选</button>
         </form>
         <ul class="pagination pagination-sm pull-right">
-          <li><a href="#">上一页</a></li>
+          <li><a href="?page=<?php echo $back;?>">上一页</a></li>
           <?php for($i=$begin;$i<$end;$i++){?>
               <li <?php echo $i===$page? 'class="active"':'';?>><a href="?page=<?php echo$i?>"><?php echo$i?></a></li>
           <?php }?>
-          <li><a href="#">下一页</a></li>
+          <li><a href="?page=<?php echo $next;?>">下一页</a></li>
         </ul>
       </div>
       <table class="table table-striped table-bordered table-hover">
