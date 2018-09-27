@@ -14,6 +14,11 @@ if(empty($_SESSION['current_login_user'])){
 require_once '../functions.php';
 require_once '../config.php';
 
+//获取分类id
+$categorie = empty($_GET['categorie']) ? "1=1" : "1=1 and posts.category_id = ".$_GET['categorie'];
+//获取文章状态
+$status = empty($_GET['status']) ? " and 1=1" : " and posts.status = '".$_GET['status']."'";
+
 //分页处理参数
 $page = empty($_GET['page']) ? 1 : (int)$_GET['page'];
 $step = 10;
@@ -25,18 +30,20 @@ if($page<1){
 }
 //从数据库中得到总共有几条数据，并算出最大页数是多少
 $count_sql = "select count(1) as num from posts INNER JOIN categories ON posts.category_id = categories.id
-    INNER JOIN users ON posts.user_id = users.id";
+    INNER JOIN users ON posts.user_id = users.id where {$categorie}.$status";
 $total_count = (int)bx_fetch_one($count_sql)['num'];
+echo $total_count;
 $total_pages = (int)ceil($total_count/$step);
-
 //判断是否为用户是否在url输入的page大于最大页数，当大于最大页数时就跳转到最大页数
 if($page>$total_pages){
-    header("Location: /admin/posts.php?page={$total_pages }");
+    $total_pages == 0 ? '' : header("Location: /admin/posts.php?page={$total_pages }");
+
 }
 
 //越过几条数据
 $offset = ($page-1)*$step;
 
+/*//获取文章数据
 $sql = "SELECT
 	posts.id,
 	posts.title,
@@ -49,10 +56,32 @@ $sql = "SELECT
     INNER JOIN users ON posts.user_id = users.id
     ORDER BY posts.created DESC
     LIMIT {$offset},{$step}	";
-$posts = bx_fetch_all($sql);
+$posts = bx_fetch_all($sql);*/
 
 
+//获取所有分类信息
+$categorie_all_sql = "select * from categories ;";
+$categorie_all = bx_fetch_all($categorie_all_sql);
 
+
+//获取分类后的所有文章信息
+//获取文章数据
+
+$categorie_sql = "SELECT
+	posts.id,
+	posts.title,
+	users.nickname AS user_name,
+	categories.name AS category_name,
+	posts.created,
+	posts.status
+    FROM posts
+    INNER JOIN categories ON posts.category_id = categories.id
+    INNER JOIN users ON posts.user_id = users.id
+    where {$categorie}.$status
+    ORDER BY posts.created DESC
+    LIMIT {$offset},{$step}	";
+$categorie = bx_fetch_all($categorie_sql);
+/*var_dump($categorie);*/
 
 //分页的页码处理
 //一共显示五页
@@ -114,24 +143,26 @@ if($end>$total_pages+1){
       <div class="page-action">
         <!-- show when multiple checked -->
         <a class="btn btn-danger btn-sm" href="javascript:;" style="display: none">批量删除</a>
-        <form class="form-inline">
-          <select name="" class="form-control input-sm">
+        <form class="form-inline" action="<?php $_SERVER['PHP_SELF'];?>">
+          <select name="categorie" class="form-control input-sm">
             <option value="">所有分类</option>
-            <option value="">未分类</option>
+              <?php foreach($categorie_all as $value){?>
+                  <option value="<?php echo $value['id'];?>" <?php echo isset($_GET['categorie']) && $_GET['categorie'] === $value['id'] ? 'selected': '';?>><?php echo $value['name'];?></option>
+              <?php }?>
           </select>
-          <select name="" class="form-control input-sm">
+          <select name="status" class="form-control input-sm">
             <option value="">所有状态</option>
-            <option value="">草稿</option>
-            <option value="">已发布</option>
+            <option value="drafted" <?php echo isset($_GET['status']) && $_GET['status'] === 'drafted' ? 'selected': '';?>>草稿</option>
+            <option value="published" <?php echo isset($_GET['status']) && $_GET['status'] === 'published' ? 'selected': '';?>>已发布</option>
           </select>
           <button class="btn btn-default btn-sm">筛选</button>
         </form>
         <ul class="pagination pagination-sm pull-right">
-          <li><a href="?page=<?php echo $back;?>">上一页</a></li>
+          <li><a href="?page=<?php echo $back;?>&&categorie=<?php echo empty($_GET['categorie']) ? '': $_GET['categorie'];?>&&status=<?php echo empty($_GET['status']) ? '': $_GET['status'];?>">上一页</a></li>
           <?php for($i=$begin;$i<$end;$i++){?>
-              <li <?php echo $i===$page? 'class="active"':'';?>><a href="?page=<?php echo$i?>"><?php echo$i?></a></li>
+              <li <?php echo $i===$page? 'class="active"':'';?>><a href="?page=<?php echo$i?>&&categorie=<?php echo empty($_GET['categorie']) ? '': $_GET['categorie'];?>&&status=<?php echo empty($_GET['status']) ? '': $_GET['status'];?>"><?php echo$i?></a></li>
           <?php }?>
-          <li><a href="?page=<?php echo $next;?>">下一页</a></li>
+          <li><a href="?page=<?php echo $next;?>&&categorie=<?php echo empty($_GET['categorie']) ? '': $_GET['categorie'];?>&&status=<?php echo empty($_GET['status']) ? '': $_GET['status'];?>">下一页</a></li>
         </ul>
       </div>
       <table class="table table-striped table-bordered table-hover">
@@ -147,7 +178,8 @@ if($end>$total_pages+1){
           </tr>
         </thead>
         <tbody>
-        <?php foreach($posts as $value){?>
+        <?php if($categorie!=0){?>
+        <?php foreach($categorie as $value){?>
             <tr>
                 <td class="text-center"><input type="checkbox"></td>
                 <td><?php echo $value['title']?></td>
@@ -161,6 +193,7 @@ if($end>$total_pages+1){
                     <a href="javascript:;" class="btn btn-danger btn-xs">删除</a>
                 </td>
             </tr>
+        <?php }?>
         <?php }?>
         </tbody>
       </table>
